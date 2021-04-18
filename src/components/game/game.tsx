@@ -25,7 +25,13 @@ const diceMap = {
   6: <D6 className="die"/>,
 };
 
+enum GameState {
+  STANDARD,
+  CONTINUED,
+}
+
 export const Game = () => {
+  const [gameState, setGameState] = useState<GameState>(GameState.STANDARD);
   const [activePlayer, setActivePlayer] = useState<number>(0);
   const [playerScores, setPlayerScores] = useState<PlayerScore[]>(Array.from(Array(numPlayers)).map(() => ({
     sessionAggregate: 0,
@@ -36,18 +42,26 @@ export const Game = () => {
   const [holdDisabled, setHoldDisabled] = useState<boolean>(false);
 
   useEffect(() => {
-    if ((playerScores[activePlayer].current + turnScore) >= 100) {
-      alert(`Player ${activePlayer+1} wins! \n\n resetting the game...`);
-      setActivePlayer(0);
-      setPlayerScores(Array.from(Array(numPlayers)).map((val, idx) => ({
-        sessionAggregate: playerScores[idx].current + playerScores[idx].sessionAggregate + turnScore,
-        current: 0,
-      })));
-      setTurnScore(0);
-      setDiceDisplay([diceMap[1], diceMap[1]]);
-      setHoldDisabled(false);
+    if (((playerScores[activePlayer].current + turnScore) >= 100) && (gameState === GameState.STANDARD)) {
+      const r = window.confirm(`Player ${activePlayer+1} wins! \n\nClick OK to start a new game\nClick cancel to continue this game`);
+      if (r === true) {
+        newGame();
+      } else {
+        setGameState(GameState.CONTINUED);
+      }
     } // eslint-disable-next-line
   }, [turnScore, activePlayer]);
+
+  const newGame = () => {
+    setActivePlayer(0);
+    setPlayerScores(Array.from(Array(numPlayers)).map((val, idx) => ({
+      sessionAggregate: playerScores[idx].current + playerScores[idx].sessionAggregate + turnScore,
+      current: 0,
+    })));
+    setTurnScore(0);
+    setDiceDisplay([diceMap[1], diceMap[1]]);
+    setHoldDisabled(false);
+  };
 
   const onDiceRoll = () => {
     setHoldDisabled(false);
@@ -100,7 +114,7 @@ export const Game = () => {
           <div className="total-scores">
             {Array.from(Array(numPlayers)).map((val, idx) => {
               return (
-                <div className={`total-score${activePlayer === idx ? ' total-score-active' : ''}`} onClick={() => { alert(`player ${idx+1} aggregate score: ${playerScores[idx].sessionAggregate}`)}}>
+                <div className={`total-score${activePlayer === idx ? ' total-score-active' : ''}`} onClick={() => { alert(`player ${idx+1} aggregate score (across games): ${playerScores[idx].sessionAggregate}`)}}>
                   <div>{`Player ${idx+1}`}</div>
                   <PersonIcon style={{ color: 'white', height: '5em', width: '5em' }}/>
                   <>
@@ -115,15 +129,20 @@ export const Game = () => {
             })}
           </div>
           <div className="turn-score">
-            <div className="turn-score-background">{turnScore || null}</div>
+            <div className="turn-score-background">{turnScore}</div>
           </div>
         </div>
         <div className="dice-section">
           {diceDisplay}
         </div>
         <div className="action-section">
-          <button className="button roll-button" onClick={onDiceRoll} >Roll</button>
-          <button disabled={holdDisabled} className="button hold-button" onClick={onHold} >Hold</button>
+          <div className="reset-button-container">
+            <button className="button reset-button" onClick={newGame}>New game</button>
+          </div>
+          <div className="game-action-buttons">
+            <button className="button roll-button" onClick={onDiceRoll} >Roll</button>
+            <button disabled={holdDisabled} className="button hold-button" onClick={onHold} >Hold</button>
+          </div>
         </div>
       </div>
     </>
