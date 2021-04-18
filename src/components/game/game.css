@@ -1,0 +1,68 @@
+.game-container {
+    height: 100%;
+    width: 100%;
+}
+
+.score-section {
+    height: 50%;
+    width: 100%;
+}
+
+.total-scores {
+    height: 60%;
+    width: 100%;
+    display: flex;
+}
+
+.total-score {
+    height: 100%;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.turn-score {
+    height: 40%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dice-section {
+    height: 30%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.die {
+    height: 5em !important;
+    width: 5em !important;
+}
+
+.action-section {
+    height: 20%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.roll-button, .hold-button {
+    width: 50%;
+    height: 100%;
+    font-size: x-large;
+    font-weight: 600;
+}
+
+.roll-button {
+    background: rgb(0, 89, 0);
+}
+
+.hold-button {
+    background: rgb(174, 113, 0);
+}
