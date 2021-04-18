@@ -16,8 +16,8 @@ code {
 
 :root {
   --site-background-color: #212121;
-  --site-middleground-color: #454545;
-  --site-foreground-color: #555555;
+  --site-middleground-color: #484848;
+  --site-foreground-color: #6a6a6a;
   --primary-text-color: white;
   --secondary-text-color: rgb(213, 213, 213);
 }
@@ -34,4 +34,5 @@ code {
 .button:disabled {
   cursor:not-allowed;
   background: black;
+  text-decoration: line-through;
 }

@@ -6,10 +6,12 @@ import { ReactComponent as D4 } from '../../static-assets/inverted-dice-4.svg';
 import { ReactComponent as D5 } from '../../static-assets/inverted-dice-5.svg';
 import { ReactComponent as D6 } from '../../static-assets/inverted-dice-6.svg';
 import PersonIcon from '@material-ui/icons/Person';
+import ProgressBar from 'react-bootstrap/ProgressBar';
+
 import './game.css';
 
 const numPlayers = 2;
-interface PlayerScore {
+export interface PlayerScore {
   sessionAggregate: number;
   current: number;
 }
@@ -35,10 +37,10 @@ export const Game = () => {
 
   useEffect(() => {
     if ((playerScores[activePlayer].current + turnScore) >= 100) {
-      alert(`player ${activePlayer+1} wins! \n\n resetting the game...`);
+      alert(`Player ${activePlayer+1} wins! \n\n resetting the game...`);
       setActivePlayer(0);
       setPlayerScores(Array.from(Array(numPlayers)).map((val, idx) => ({
-        sessionAggregate: playerScores[idx].current + playerScores[idx].sessionAggregate,
+        sessionAggregate: playerScores[idx].current + playerScores[idx].sessionAggregate + turnScore,
         current: 0,
       })));
       setTurnScore(0);
@@ -92,32 +94,39 @@ export const Game = () => {
   };
 
   return (
-    <div className="game-container">
-      <div className="score-section">
-        <div className="total-scores">
-          <div className="total-score" style={{ opacity: `${activePlayer === 0 ? '1' : '0.6'}`}}>
-            <div>player 1</div>
-            <PersonIcon style={{ height: '5em', width: '5em' }}/>
-            <div>{playerScores[0].current}</div>
+    <>
+      <div className="game-container">
+        <div className="score-section">
+          <div className="total-scores">
+            {Array.from(Array(numPlayers)).map((val, idx) => {
+              return (
+                <div className={`total-score${activePlayer === idx ? ' total-score-active' : ''}`} onClick={() => { alert(`player ${idx+1} aggregate score: ${playerScores[idx].sessionAggregate}`)}}>
+                  <div>{`Player ${idx+1}`}</div>
+                  <PersonIcon style={{ color: 'white', height: '5em', width: '5em' }}/>
+                  <>
+                    {playerScores[idx].current}
+                    <ProgressBar style={{ width: '75%', height: '0.75em' }}>
+                      <ProgressBar now={playerScores[idx].current} key={1} />
+                      {activePlayer === idx && <ProgressBar style={{ opacity: 0.4 }} now={turnScore} key={2} />}
+                    </ProgressBar>
+                  </>
+                </div>
+              )
+            })}
           </div>
-          <div className="total-score" style={{ opacity: `${activePlayer === 1 ? '1' : '0.6'}`}}>
-            <div>player 2</div>
-            <PersonIcon style={{ height: '5em', width: '5em' }} />
-            <div>{playerScores[1].current}</div>
+          <div className="turn-score">
+            <div className="turn-score-background">{turnScore || null}</div>
           </div>
         </div>
-        <div className="turn-score">
-          <div>{turnScore}</div>
+        <div className="dice-section">
+          {diceDisplay}
+        </div>
+        <div className="action-section">
+          <button className="button roll-button" onClick={onDiceRoll} >Roll</button>
+          <button disabled={holdDisabled} className="button hold-button" onClick={onHold} >Hold</button>
         </div>
       </div>
-      <div className="dice-section">
-        {diceDisplay}
-      </div>
-      <div className="action-section">
-        <button className="button roll-button" onClick={onDiceRoll} >Roll</button>
-        <button disabled={holdDisabled} className="button hold-button" onClick={onHold} >Hold</button>
-      </div>
-    </div>
+    </>
   );
 }
 

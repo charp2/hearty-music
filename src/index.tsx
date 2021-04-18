@@ -1,12 +1,16 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+export const Portal = ({children} : {children: ReactNode}) => ReactDOM.createPortal(children, document.getElementById("portal") || document.createElement("portal"));
+
+
 ReactDOM.render(
   <React.StrictMode>
     <App />
+    <div id="portal"></div>
   </React.StrictMode>,
   document.getElementById('root')
 );
