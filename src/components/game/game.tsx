@@ -113,14 +113,15 @@ export const Game = () => {
         <div className="score-section">
           <div className="total-scores">
             {Array.from(Array(numPlayers)).map((val, idx) => {
+              const playerScore = playerScores[idx].current;
               return (
                 <div className={`total-score${activePlayer === idx ? ' total-score-active' : ''}`} onClick={() => { alert(`player ${idx+1} aggregate score (across games): ${playerScores[idx].sessionAggregate}`)}}>
                   <div>{`Player ${idx+1}`}</div>
                   <PersonIcon style={{ color: 'white', height: '5em', width: '5em' }}/>
                   <>
-                    {playerScores[idx].current}
+                    {playerScore}
                     <ProgressBar style={{ width: '75%', height: '0.75em' }}>
-                      <ProgressBar now={playerScores[idx].current} key={1} />
+                      <ProgressBar now={playerScore} key={1} />
                       {activePlayer === idx && <ProgressBar style={{ opacity: 0.4 }} now={turnScore} key={2} />}
                     </ProgressBar>
                   </>

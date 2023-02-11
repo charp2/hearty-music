@@ -19,3 +19,15 @@ ReactDOM.render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
+
+function makeAPICall(url: string, method: any, data: any) {
+  var xhr = new XMLHttpRequest();
+  xhr.open(method, url, true);
+  xhr.setRequestHeader("Content-Type", "application/json");
+  if (data) {
+    xhr.send(JSON.stringify(data));
+  } else {
+    xhr.send();
+  }
+  return xhr;
+}
